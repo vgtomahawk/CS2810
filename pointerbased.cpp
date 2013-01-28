@@ -1,6 +1,7 @@
 #include <iostream>
 using namespace std;
 #define ENDL -1
+/*Adt defining a single node*//*Later modify the definition to any arbit DT*/
 class Elem
 {
     public:
