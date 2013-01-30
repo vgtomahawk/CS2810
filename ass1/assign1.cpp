@@ -45,6 +45,7 @@ class Dlist
 		int compare(Dlist* b);
 /*1 if b is greater than a return 1 if equal return 0 else return -1*/
         	Dlist* add(Dlist* b);
+		Dlist* sub(Dlist* b);
 };
 Node* Dlist::getlast()
 {
@@ -233,7 +234,6 @@ Dlist* Dlist::add(Dlist* b)
 		return sum;
 	}
 }
-	
 int main()
 {
 	Dlist* newlist=new Dlist();
