@@ -40,8 +40,11 @@ class Dlist
 		int pop();
 		int popback();
 		Node* getlast();
+		void copy(Dlist* dest);
 		void print();
-        void add(Dlist* list2,Dlist* list3);
+		int compare(Dlist* b);
+/*1 if b is greater than a return 1 if equal return 0 else return -1*/
+        	Dlist* add(Dlist* b);
 };
 Node* Dlist::getlast()
 {
@@ -113,32 +116,7 @@ int Dlist::length()
         curr=curr->next;
     }
     return l;
-}
-void Dlist::add(Dlist* list2,Dlist* list3)
-{
-    if(this->head==NULL)
-    {
-        list3->copy(list2);
-        return;
-    }
-    else if(list2->head==NULL)
-    {
-        list3->copy(this);
-    }
-    else
-    {
-        int l=this->length();
-        int m=list2->length();
-        if(l>=m)
-        {
-            /*add l+m empty nodes to list2*/
-            int i=0;
-            for(i=0;i<l-m;i++)
-            {
-                list2->pushback(0);
-            }
-            /*now both have length l*/
-            int last_1=
+}  
 void makelist(Dlist* newlist,string str)
 {
 	int l=str.length();
@@ -158,21 +136,117 @@ void makelist(Dlist* newlist,string str)
     }
     return;
 }
-
+void Dlist::copy(Dlist* dest)
+{
+	Node* curr=this->head;
+	while(curr!=NULL)
+	{
+		dest->push(curr->data);
+		curr=curr->next;
+	}
+	return;
+}
+int Dlist::compare(Dlist* b)
+{
+	int la=this->length();
+	int lb=b->length();
+	if(la<lb)
+	{
+		return 1;
+	}
+	else if(la>lb)
+	{
+		return -1;
+	}
+	else
+	{
+		int first=this->head->data;
+		int second=b->head->data;
+		if(first>second)
+		{
+			return -1;
+		}
+		else if(second<first)
+		{
+			return 1;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+}
+Dlist* Dlist::add(Dlist* b)
+{
+	Dlist* sum=new Dlist();
+	if(this->head==NULL)
+	{
+		b->copy(sum);
+		return sum;
+	}
+	else if(b->head==NULL)
+	{
+		 this->copy(sum);
+		 return sum;
+	}
+	else
+	{
+		Dlist* small;
+		Dlist* big;
+		int sign=this->compare(b);
+		if(sign>0)
+		{
+			big=b;
+			small=this;
+		}
+		else
+		{
+			small=b;
+			big=this;
+		}
+		Node* last_big=big->getlast();
+		Node* last_small=small->getlast();
+		int carry=0;
+		int remainder;
+		int summation;
+		while(last_small!=NULL)
+		{
+			summation=(last_small->data)+(last_big->data)+carry;
+			carry=summation/10000;
+			remainder=summation%10000;
+			sum->pushback(remainder);
+			last_small=last_small->prev;
+			last_big=last_big->prev;
+		}
+		while(last_big!=NULL)
+		{
+			summation=(last_big->data)+carry;
+			carry=summation/10000;
+			remainder=summation%10000;
+			sum->pushback(remainder);
+			last_big=last_big->prev;
+		}
+		if(carry>0)
+		{
+			sum->pushback(carry);
+		}
+		return sum;
+	}
+}
+	
 int main()
 {
 	Dlist* newlist=new Dlist();
-    Dlist* newlist2=new Dlist();
+    	Dlist* newlist2=new Dlist();
 	string str;
 	cin>>str;
-    makelist(newlist,str);
-    cin>>str;
-    makelist(newlist2,str);
-    newlist->print();
-    newlist2->print();
-    cout<<newlist->length();
-    Dlist* newlist3=new Dlist();
-    newlist->add(newlist2,newlist3);
-    newlist3->print();	
+    	makelist(newlist,str);
+    	cin>>str;
+    	makelist(newlist2,str);
+	newlist->print();
+	newlist2->print();
+	Dlist* newlist3;
+	newlist3=newlist->add(newlist2);
+	newlist3->print();
 	return 0;
 }
